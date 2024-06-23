@@ -1,95 +1,57 @@
+"use client";
 import Image from "next/image";
-import styles from "./page.module.css";
 
-export default function Home() {
+import { StackedCarousel } from "./components";
+
+import "./page.css";
+
+const images = [
+  "/fake-mp.jpeg",
+  "/occupy-parliament.jpeg",
+  "/reject-not-amend.jpeg",
+  "/reject.jpeg",
+  "/rex-img.jpeg",
+  "/sadaka.jpeg",
+  "/seven-days-of-rage.jpeg",
+];
+
+const Home = () => {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <div className="root">
+      <header className="header">
+        <nav className="nav-bar">
+          <Image
+            src="/fuatilia-logo.webp"
+            alt="fuatilia"
+            width={80}
+            height={80}
+          />
+          <p>Keeping the MPIGS accountable</p>
+        </nav>
+      </header>
+      <main className="main">
+        <section className="hero-section">
+          <div className="hero">
+            <h2>
+              Reject finance bill 2024, keep the MPIGS accountable, say no to
+              impunity and injustice!
+            </h2>
+            <p>
+              How did your MP vote for the 2024 fianance bill? Are you happy?{" "}
+              Track all proposed bills, who proposed them and how each MP voted
+              for the bill.
+            </p>
+          </div>
+          <StackedCarousel images={images} />
+        </section>
+      </main>
+      <footer className="footer-content">
+        <small>
+          &copy; {new Date().getFullYear()} Fuatilia All Rights Reserved.
+        </small>
+      </footer>
+    </div>
   );
-}
+};
+
+export default Home;

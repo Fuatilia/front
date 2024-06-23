@@ -1,0 +1,29 @@
+/* StackedCarousel.css */
+.carousel {
+  min-height: 30rem;
+  position: relative;
+}
+
+.carousel-item {
+  position: absolute;
+  /* max-width: 20rem;
+  max-height: 20rem; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.5s ease-in-out;
+  transform: rotate(var(--rotation)) translateZ(var(--translateZ));
+  z-index: var(--zIndex);
+  cursor: pointer;
+}
+
+.carousel-item.active {
+  transform: rotate(0deg) translateZ(0px);
+  z-index: 9999999999;
+}
+
+.carousel-item img {
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
