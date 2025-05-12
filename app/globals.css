@@ -1,14 +1,16 @@
-:root {
+@import "tailwindcss";
+
+:root { 
   --default-margin: 1rem;
   --default-padding: 1rem;
   --default-gap: 1rem;
   --default-fs: calc(var(--fs-multiplier, 1) * 1rem);
-}
+} 
 
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  /* padding: 0; 
+  margin: 0;  */
 }
 
 html,
@@ -20,4 +22,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
+} 

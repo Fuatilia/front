@@ -18,7 +18,10 @@ p {
   top: 0;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 40px;
+
 
   > .nav-bar {
     display: flex;
@@ -29,7 +32,7 @@ p {
       font-style: italic;
       color: #2cbc63;
       background-color: #f5f5f5;
-      padding: calc(var(--default-padding) / 2);
+      padding: calc(var(--default-padding) / 2); 
       border-left: 5px solid #003822;
       border-radius: 5px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

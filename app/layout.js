@@ -1,6 +1,8 @@
 import { Inter } from "next/font/google";
 import { Red_Hat_Mono } from "next/font/google";
 import "./globals.css";
+import './page.css'
+import Header from "./components/Header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,16 +19,22 @@ const redHatMono = Red_Hat_Mono({
 });
 
 export const metadata = {
-  title: "Keeping the mpigs Accountable!",
+  title: "Keeping the MPs Accountable!",
   description:
-    "Keeping the mpigs Accountable for their actions in proposed bills in parliament",
+    "Keeping the mps accountable for their actions in proposed bills in parliament",
 };
 
 const RootLayout = ({ children }) => {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${redHatMono.variable}`}>
+      <body className={`${inter.variable} ${redHatMono.variable} flex flex-col h-[100vh] justify-between`}>
+        <Header />
         {children}
+        <footer className="footer-content">
+          <small>
+            &copy; {new Date().getFullYear()} Fuatilia All Rights Reserved.
+          </small>
+        </footer>
       </body>
     </html>
   );
