@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaEye } from "react-icons/fa";
 import { LuEyeClosed } from "react-icons/lu";
+import Password from "../common/Password";
 
 interface SignupFormData {
   first_name: string;
@@ -12,6 +13,7 @@ interface SignupFormData {
   username: string;
   phone_number: string;
   password: string;
+  parent_organization: string;
 }
 
 export default function SignupForm() {
@@ -23,10 +25,10 @@ export default function SignupForm() {
     username: "",
     phone_number: "",
     password: "",
+    parent_organization: "",
   });
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [seePassword, setSeePassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,17 +44,24 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/v1/create/user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, parent_organization: "fuatilia" }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/v1/create/user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...formData }),
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Something went wrong");
+        console.log("error response: ", data);
+
+        throw new Error(
+          data.error || "Something went wrong when signing up. Try again"
+        );
       }
 
       // Redirect to login or dashboard after successful signup
@@ -65,11 +74,6 @@ export default function SignupForm() {
       setLoading(false);
     }
   };
-
-  function togglePassword(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.preventDefault();
-    setSeePassword(!seePassword);
-  }
   return (
     <form className="" onSubmit={handleSubmit}>
       {error && (
@@ -164,34 +168,24 @@ export default function SignupForm() {
           onChange={handleChange}
         />
       </div>
+      <Password password={formData?.password} handleChange={handleChange} />
       <div>
-        <label htmlFor="password" className="sr-only">
-          Password
+        <label htmlFor="org" className="sr-only">
+          Parent Organization
         </label>
-        <div className={"flex"}>
-          <input
-            id="password"
-            name="password"
-            type={seePassword ? "text" : "password"}
-            required
-            className={
-              "w-[500px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-l-2xl  outline-none mb-3"
-            }
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <button
-            className={
-              "w-[100px] h-[40px] flex items-center justify-center bg-transparent border border-slate-300 rounded-r-2xl outline-none mb-3 cursor-pointer"
-            }
-            onClick={(e) => togglePassword(e)}
-          >
-            {seePassword ? <LuEyeClosed /> : <FaEye />}
-          </button>
-        </div>
+        <input
+          id="org"
+          name="org"
+          type="text"
+          required
+          className={
+            "w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+          }
+          placeholder="e.g LSK(if none enter Fuatilia)..."
+          value={formData.parent_organization}
+          onChange={handleChange}
+        />
       </div>
-
       <div className="w-full flex justify-center items-center">
         <button
           type="submit"
