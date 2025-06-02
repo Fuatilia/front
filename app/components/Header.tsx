@@ -13,7 +13,8 @@ const Header = () => {
 
   return (
     <header className="w-full px-4 py-4 shadow-md bg-white">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <div className="w-full mx-auto flex items-center justify-between">
+        <div className={'hidden lg:block'}></div>
         <div
           onClick={() => router.push("/")}
           className="flex items-center cursor-pointer"
