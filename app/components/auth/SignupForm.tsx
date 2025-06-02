@@ -29,6 +29,7 @@ export default function SignupForm() {
   });
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [successNotification, setSuccessNotification] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -55,17 +56,16 @@ export default function SignupForm() {
         }
       );
 
-      if (!response.ok) {
-        const data = await response.json();
-        console.log("error response: ", data);
+      const data = await response.json();
 
+      if (!response.ok) {
         throw new Error(
           data.error || "Something went wrong when signing up. Try again"
         );
+      }else{
+        setSuccessNotification('Successful! Verify your credentials from your email to proceed')
       }
 
-      // Redirect to login or dashboard after successful signup
-      router.push("/login");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An error occurred during signup"
@@ -75,13 +75,18 @@ export default function SignupForm() {
     }
   };
   return (
-    <form className="" onSubmit={handleSubmit}>
+    <form className="w-full flex flex-col items-center justify-center px-4" onSubmit={handleSubmit}>
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-2xl mb-3 ">
           {error}
         </div>
       )}
-      <div className={"w-[600px] flex"}>
+      {successNotification && (
+        <div className="bg-green-100 border border-green-200 text-green-600 px-4 py-3 rounded-2xl mb-3 ">
+          {successNotification}
+        </div>
+      )}
+      <div className={"w-full lg:w-[600px] flex flex-col lg:flex-row"}>
         <div>
           <label htmlFor="first_name" className="sr-only">
             First Name
@@ -92,7 +97,7 @@ export default function SignupForm() {
             type="text"
             required
             className={
-              "w-[295px] mr-[5px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+              "w-full lg:w-[295px] lg:mr-[5px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl outline-none mb-3"
             }
             placeholder="First Name"
             value={formData.first_name}
@@ -109,7 +114,7 @@ export default function SignupForm() {
             type="text"
             required
             className={
-              "w-[295px] ml-[5px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+              "w-full lg:w-[295px] lg:ml-[5px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
             }
             placeholder="Last Name"
             value={formData.last_name}
@@ -117,7 +122,7 @@ export default function SignupForm() {
           />
         </div>
       </div>
-      <div>
+      <div className="w-full lg:w-[600px]">
         <label htmlFor="email" className="sr-only">
           Email address
         </label>
@@ -127,14 +132,14 @@ export default function SignupForm() {
           type="email"
           required
           className={
-            "w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+            "w-full h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
           }
           placeholder="Email address"
           value={formData.email}
           onChange={handleChange}
         />
       </div>
-      <div>
+      <div className="w-full lg:w-[600px]">
         <label htmlFor="username" className="sr-only">
           Username
         </label>
@@ -144,14 +149,14 @@ export default function SignupForm() {
           type="text"
           required
           className={
-            "w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+            "w-full h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
           }
           placeholder="Username"
           value={formData.username}
           onChange={handleChange}
         />
       </div>
-      <div>
+      <div className="w-full lg:w-[600px]">
         <label htmlFor="phone_number" className="sr-only">
           Phone Number
         </label>
@@ -161,7 +166,7 @@ export default function SignupForm() {
           type="tel"
           required
           className={
-            "w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+            "w-full h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
           }
           placeholder="Phone Number"
           value={formData.phone_number}
@@ -169,19 +174,19 @@ export default function SignupForm() {
         />
       </div>
       <Password password={formData?.password} handleChange={handleChange} />
-      <div>
-        <label htmlFor="org" className="sr-only">
+      <div className="w-full lg:w-[600px]">
+        <label htmlFor="parent_organization" className="sr-only">
           Parent Organization
         </label>
         <input
-          id="org"
-          name="org"
+          id="parent_organization"
+          name="parent_organization"
           type="text"
           required
           className={
-            "w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+            "w-full h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl outline-none mb-3"
           }
-          placeholder="e.g LSK(if none enter Fuatilia)..."
+          placeholder="LSK (if none, enter Fuatilia)"
           value={formData.parent_organization}
           onChange={handleChange}
         />

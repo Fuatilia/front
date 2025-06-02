@@ -1,25 +1,31 @@
-"use client"
+import { Bill } from "../../globals";
+import BillsList from "./BillsList";
 
-import { useFetchAuth } from "../../hooks/useFetchAuth";
+export async function fetchBills() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal/v1/filter`,
+    {
+      cache: "no-store",
+    }
+  );
 
-export default async function Bills() {
-    const page=1
-    const items_per_page = 10
+  if (!res.ok) {
+    throw new Error("Failed to fetch bills");
+  }
 
-    const { data: bills, isLoading, error } = useFetchAuth({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/v1/filter?items_per_page=${items_per_page}&page=${page}`,
-      queryKey: ['bills'],
-      // select: (res) => res.products, 
-    });
-  
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error loading bills</p>;
+  const response = await res.json();
+  return response.data; 
+}
 
-    console.log(bills, error, isLoading);
-    
-    return (
-      <ul>
-        <p>Bills</p>
-      </ul>
-    )
+
+export default async function BillsPage() {
+  const bills:Bill[] = await fetchBills();
+
+  if (!bills || bills.length === 0) {
+    return <p>No bills found.</p>;
+  }
+
+  return (
+    <BillsList bills={bills} />
+  );
 }

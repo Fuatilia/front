@@ -62,13 +62,13 @@ export default function LoginForm() {
     }
   };
   return (
-    <form className="" onSubmit={handleSubmit}>
+    <form className="w-full flex flex-col items-center justify-center px-4" onSubmit={handleSubmit}>
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
           {error}
         </div>
       )}
-      <div>
+      <div className="w-full lg:w-[600px]">
         <label htmlFor="username" className="sr-only">
           Username
         </label>
@@ -78,7 +78,7 @@ export default function LoginForm() {
           type="text"
           required
           className={
-            "w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3"
+            "w-full h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl outline-none mb-3"
           }
           placeholder="Username"
           value={formData.username}
