@@ -1,21 +1,31 @@
-export default async function Bills() {
-    const page=1
-    const items_per_page = 10
-    const headers = {
-        'Authorization': `Bearer ${process.env.TOKEN}`,
-        'Content-Type': 'application/json'
-    };
-    
-    const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/v1/filter?items_per_page=${items_per_page}&page=${page}`,{
-        method: 'GET',
-        headers: headers
-    })
-    const bills = await data.json()
-    console.log(bills);
-    
-    return (
-      <ul>
-        <p>Bills</p>
-      </ul>
-    )
+import { Bill } from "../../globals";
+import BillsList from "./BillsList";
+
+export async function fetchBills() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal/v1/filter`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch bills");
+  }
+
+  const response = await res.json();
+  return response.data; 
+}
+
+
+export default async function BillsPage() {
+  const bills:Bill[] = await fetchBills();
+
+  if (!bills || bills.length === 0) {
+    return <p>No bills found.</p>;
+  }
+
+  return (
+    <BillsList bills={bills} />
+  );
 }

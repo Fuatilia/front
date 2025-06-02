@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Password from "../common/Password";
 
 interface LoginFormData {
   username: string;
@@ -31,17 +32,24 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/v1/login/user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...formData }),
+        }
+      );
+
+      const data = await response.json();
 
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.message || "Something went wrong");
+      } else {
+        const token = data.access;
+        localStorage.setItem("accessToken", token);
       }
 
       router.push("/bills");
@@ -54,13 +62,13 @@ export default function LoginForm() {
     }
   };
   return (
-    <form className="" onSubmit={handleSubmit}>
+    <form className="w-full flex flex-col items-center justify-center px-4" onSubmit={handleSubmit}>
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
           {error}
         </div>
       )}
-      <div>
+      <div className="w-full lg:w-[600px]">
         <label htmlFor="username" className="sr-only">
           Username
         </label>
@@ -69,33 +77,23 @@ export default function LoginForm() {
           name="username"
           type="text"
           required
-          className={'w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3'}
+          className={
+            "w-full h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl outline-none mb-3"
+          }
           placeholder="Username"
           value={formData.username}
           onChange={handleChange}
         />
       </div>
-      <div>
-        <label htmlFor="password" className="sr-only">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          className={'w-[600px] h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-2xl  outline-none mb-3'}
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
-      </div>
-      
+      <Password password={formData?.password} handleChange={handleChange} />
+
       <div className="w-full flex justify-center items-center">
         <button
           type="submit"
           disabled={loading}
-          className={'w-[200px] h-[40px] text-white bg-[#2cbc63] rounded-2xl  outline-none mt-6 cursor-pointer'}
+          className={
+            "w-[200px] h-[40px] text-white bg-[#2cbc63] rounded-2xl  outline-none mt-6 cursor-pointer"
+          }
         >
           {loading ? "Logging In..." : "Log In"}
         </button>
