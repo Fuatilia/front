@@ -35,7 +35,7 @@ const RepsList = ({ reps }: { reps: Representative[] }) => {
               className="border border-slate-500 p-1 lg:p-2 rounded-xl flex justify-between items-center text-sm "
             >
               <Link
-                href={`bills/${rep.id}`}
+                href={`/reps/${rep.id}`}
                 className={"cursor-pointer hover:text-[#2cbc63] w-[60%]"}
               >
                 {rep.full_name} - {rep.area_represented}

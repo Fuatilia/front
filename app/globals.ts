@@ -15,7 +15,7 @@ export type Bill = {
   title: string;
   status: BillStatus;
   sponsored_by: string;
-  supported_by: string | null;
+  supported_by: string[] | null;
   house: House;
   bill_no: string;
   gazette_no: string;
@@ -34,7 +34,7 @@ export type Bill = {
 };
 
 export type Party = 'UDA' | 'WDM' | 'ODM' | 'IND';
-export type PositionClass = 'ELECTED' | 'NOMINATED' | string;
+export type PositionClass = 'ELECTED' | 'NOMINATED';
 export type Position = 'MP' | 'SENATOR'
 
 export type Representative = {
@@ -55,3 +55,8 @@ export type Representative = {
   updated_at: string;
 };
 
+export type PaginationType = {
+  page: number;
+  items_per_page: number;
+  total_pages: number;
+};

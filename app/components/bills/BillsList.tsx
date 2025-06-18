@@ -28,7 +28,7 @@ const BillsList = ({ bills }: { bills: Bill[] }) => {
       {filteredBills.length === 0 && searchText?.length > 0 ? (
         <p>No matching bills found.</p>
       ) : (
-        <ul className="space-y-2 max-h-[500px] lg:max-h-[600px] overflow-y-scroll">
+        <ul className="space-y-2 max-h-[450px] lg:max-h-[550px] overflow-y-scroll">
           {filteredBills.map((bill) => (
             <li key={bill.id} className="border border-slate-500 p-1 lg:p-2 rounded-xl flex justify-between items-center text-sm ">
               <Link href={`bills/${bill.id}`} className={'cursor-pointer hover:text-[#2cbc63] w-[60%]'}>{bill.title}</Link>
