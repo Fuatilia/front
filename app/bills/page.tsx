@@ -4,7 +4,7 @@ import { Bill, PaginationType } from "../globals";
 
 export async function fetchBills(current_page: number) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal/v1/filter?items_per_page=10&page=${current_page}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal?items_per_page=10&page=${current_page}`,
     {
       cache: "no-store",
     }
@@ -15,21 +15,30 @@ export async function fetchBills(current_page: number) {
   }
 
   const response = await res.json();
-  return response;
+  return {
+    data: response.data,
+    pagination: response.meta 
+  };
 }
 
 export default async function BillsPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }> | { page?: string };
 }) {
-  const currentPage = parseInt(searchParams.page || "1", 10);
+  const resolvedSearchParams = await searchParams;
+  const currentPage = parseInt( resolvedSearchParams.page || "1", 10);
 
   const { data: bills, pagination }: { data: Bill[]; pagination: PaginationType } =
     await fetchBills(currentPage);
 
   if (!bills || bills.length === 0) {
-    return <p>No bills found.</p>;
+    return (
+      <>
+        <p>No bills found.</p>;
+        <Pagination current={pagination.page} total={pagination.page} />
+      </>
+    );
   }
 
   return (
