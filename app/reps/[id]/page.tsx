@@ -16,7 +16,7 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
 
 
   const imageResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/image/${rep.id}?${params.toString()}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/kkkkk/portal/image/${rep.id}?${params.toString()}`,
     {
       cache: "no-store",
     }
@@ -36,7 +36,7 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
   
 
   return (
-    <div className={"p-3 max-w-2xl mx-auto "}>
+    <div className={"p-3 max-w-2xl mx-auto"}>
      <div className="relative sm:w-40 sm:h-40 rounded-sm overflow-hidden bg-gray-100 flex-shrink-0 shadow-sm border border-gray-100 justify ">
         <Image
           src={imageSrc}
@@ -55,9 +55,10 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
 async function fetchRepBills(id: string) {
     const params = new URLSearchParams({
       sponsored_by: `${id}`,
+      page: '1',      
     });
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal?${params.toString()}`, {
         cache: 'no-store', 
     });
   
