@@ -16,7 +16,7 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
 
 
   const imageResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/kkkkk/portal/image/${rep.id}?${params.toString()}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/image/${rep.id}?${params.toString()}`,
     {
       cache: "no-store",
     }
