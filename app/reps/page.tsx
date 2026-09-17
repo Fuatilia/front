@@ -3,8 +3,15 @@ import RepsList from "../components/reps/RepsList";
 import { PaginationType, Representative } from "../globals";
 
 export async function fetchReps(current_page: number) {
+  const params = new URLSearchParams({
+    items_per_page: "20",
+    page: `${current_page}`,
+    order_by: "full_name",
+    order_direction: "ASC"
+  });
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/v1/filter?items_per_page=10&page=${current_page}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal?${params.toString()}`,
     {
       cache: "no-store",
     }
@@ -15,15 +22,19 @@ export async function fetchReps(current_page: number) {
   }
 
   const response = await res.json();
-  return response;
+  return {
+    data: response.data,
+    pagination: response.meta 
+  };
 }
 
 export default async function RepsPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }> | { page?: string };
 }) {
-  const currentPage = parseInt(searchParams.page || "1", 10);
+  const resolvedSearchParams = await searchParams;
+  const currentPage = parseInt( resolvedSearchParams.page || "1", 10);
   const {
     data: reps,
     pagination,
@@ -32,7 +43,12 @@ export default async function RepsPage({
   );
 
   if (!reps || reps.length === 0) {
-    return <p>No representatives found.</p>;
+    return (
+        <>
+        <p>No representatives found.</p>;
+        <Pagination current={pagination.page} total={pagination.page} />
+      </>
+    );
   }
 
   return (

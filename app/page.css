@@ -91,10 +91,11 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: sticky;
+  position: static;
   bottom: 0;
   color: rgb(63, 16, 56);
-  font-style: italic;
+  margin-top: 20;
+  font-size: 19px;
 }
 
 @media (max-width: 1200px) {

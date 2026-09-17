@@ -1,61 +1,135 @@
-import { Representative } from "../../globals";
+import Image from 'next/image';
+import { Representative, RepresentativeVoteListProps, RepVoteSummary } from "../../globals";
+import RepresentativeData from "../../components/reps/RepData";
+import RepresentativeBillList from '../../components/reps/BillsSponsored';
+import RepresentativeVoteList from '../../components/reps/RepVotes';
 
-export async function fetchRep(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/v1/${id}`,
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
+
+
+const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
+  const params = new URLSearchParams({
+    file_type: "image",
+  });
+
+
+  const imageResponse = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/image/${rep.id}?${params.toString()}`,
     {
       cache: "no-store",
     }
   );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch rep");
-  }
+  let imageSrc: string
 
-  const response = await res.json();
-  return response.data;
+  if (!imageResponse.ok) {
+    imageSrc = '/images/fakemp.jpeg';
+
+  }else{
+    const imageRes = await imageResponse.json();
+    imageSrc = imageRes.data
+    ? `data:image/jpeg;base64,${imageRes.data}`
+    : '/images/fakemp.jpeg'; // Make sure you have a fallback image in your /public/images folder
+  };
+  
+
+  return (
+    <div className={"p-3 max-w-2xl mx-auto"}>
+     <div className="relative sm:w-40 sm:h-40 rounded-sm overflow-hidden bg-gray-100 flex-shrink-0 shadow-sm border border-gray-100 justify ">
+        <Image
+          src={imageSrc}
+          alt={`${rep.full_name}'s avatar`}
+          fill
+          sizes="64px"
+          className="object-cover"
+          unoptimized // Prevents Next.js from wasting CPU trying to optimize data strings
+        />
+      </div>
+    </div>
+  );
+
+};
+
+async function fetchRepBills(id: string) {
+    const params = new URLSearchParams({
+      sponsored_by: `${id}`,
+      page: '1',      
+    });
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal?${params.toString()}`, {
+        cache: 'no-store', 
+    });
+  
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch representative bill data")
+    };
+
+    const responseData = await res.json();
+    console.log()
+    return responseData.data; 
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+async function fetchRepVotes(id: string, vote :string) {
+  const params = new URLSearchParams({
+    vote: `${vote}`,
+  });
+
+    // TODO : Query for Yes votes and No votes
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}votes/portal/rep-summary/${id}?${params.toString()}`, {
+        cache: 'no-store', 
+    });
+
+  
+    if (!res.ok) {
+        throw new Error("Failed to fetch representative vote data")
+    };
+
+    const json = await res.json();
+    return json.data; 
+}
+
+async function fetchRepDetails(id: string) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/${id}`, {
+        cache: 'no-store', 
+    });
+  
+    if (!res.ok) {
+        throw new Error("Failed to fetch representative data")
+    };
+
+    const json = await res.json();
+    return json.data; 
+}
+
+export default async function RepDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const rep: Representative = await fetchRep(id);
+  const rep :Representative = await fetchRepDetails(id);
 
   if (!rep) {
-    return <p>No such rep found.</p>;
+    return <p className="p-6">Representative not found.</p>;
+  }
+
+  const sponsoredBills = await fetchRepBills(id)
+  const votedsFor = await fetchRepVotes(id,'YES')
+  const votedAgainst = await fetchRepVotes(id,'NO')
+
+  
+
+  const repVoteListProps : RepresentativeVoteListProps  = {
+    votedYes : votedsFor,
+    votedNo : votedAgainst
   }
 
   return (
-    <div className={"w-full h-full flex justify-center items-center"}>
-      <div
-        className={
-          "w-[75%] lg:w-[50%] h-auto border border-slate-200 rounded-md flex-col justify-center items-center p-4"
-        }
-      >
-        <p className="font-semibold underline mb-3 text-center">
-          {rep?.full_name}, ({rep.representation_summary.party})
-        </p>
-        {/* TODO: image of rep will go here */}
-        {rep.position_class === "ELECTED" ? (
-          <p className={"mb-3 text-sm text-center"}>
-            ELECTED as the {rep.position} by the people of{" "}
-            {rep.area_represented}{" "}
-          </p>
-        ) : (
-          <p className={"mb-3 text-sm text-center"}>Nominated {rep.position}</p>
-        )}
-        {rep.current_parliamentary_roles?.length > 0 && (
-          <p className={"mb-3 text-sm text-center"}>
-            Also serves as the {rep.current_parliamentary_roles}
-          </p>
-        )}
-        {rep.phone_number && (
-          <p className={"mb-3 text-sm text-center"}>{rep.phone_number}</p>
-        )}
-      </div>
+    <div className="w-full h-full items-start justify-start p-4 lg:p-8">
+    <RepresentativeImage rep = {rep}/>
+    <RepresentativeData rep = {rep}/>
+    <RepresentativeBillList  sponsoredBills = {sponsoredBills}/>
+    <RepresentativeVoteList {...repVoteListProps}/>
     </div>
+   
   );
 }
