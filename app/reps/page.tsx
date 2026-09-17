@@ -3,8 +3,15 @@ import RepsList from "../components/reps/RepsList";
 import { PaginationType, Representative } from "../globals";
 
 export async function fetchReps(current_page: number) {
+  const params = new URLSearchParams({
+    items_per_page: "20",
+    page: `${current_page}`,
+    order_by: "full_name",
+    order_direction: "ASC"
+  });
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal?items_per_page=10&page=${current_page}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal?${params.toString()}`,
     {
       cache: "no-store",
     }

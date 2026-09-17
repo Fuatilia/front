@@ -28,14 +28,21 @@ const BillsList = ({ bills }: { bills: Bill[] }) => {
       {filteredBills.length === 0 && searchText?.length > 0 ? (
         <p>No matching bills found.</p>
       ) : (
-        <ul className="space-y-2 max-h-[450px] lg:max-h-[550px] overflow-y-scroll">
+        <ul className="space-y-2 max-h-[80vh] overflow-y-scroll">
           {filteredBills.map((bill) => (
-            <li key={bill.id} className="border border-slate-500 p-1 lg:p-2 rounded-xl flex justify-between items-center text-sm ">
-              <Link href={`bills/${bill.id}`} className={'cursor-pointer hover:text-[#2cbc63] w-[60%]'}>{bill.title}</Link>
-              <div className="flex flex-col w-[35%] md:w-[20%] lg:w-[15%]">
-                <p>{bill.status}</p>
-                <p className={'hidden md:flex'}>({bill.house})</p>
-              </div>
+            <li key={bill.id} className="border border-slate-500 p-1 lg:p-2 rounded-xl hover:bg-orange-50 transition-colors duration-200">
+              <Link href={`bills/${bill.id}`} className="flex justify-between items-center p-1 lg:p-2 text-sm w-full h-full cursor-pointer group">
+
+                <div className="w-[60%] group-hover:text-[black] transition-colors duration-200">
+                  {bill.title}
+                </div>
+
+                <div className="flex flex-col w-[32%] md:w-[20%] lg:w-[15%] text-right">
+                  <p>{bill.status}</p>
+                  <p className="hidden md:block">({bill.house})</p>
+                </div>
+
+              </Link>
             </li>
           ))}
         </ul>

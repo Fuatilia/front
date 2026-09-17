@@ -3,8 +3,15 @@ import Pagination from "../components/common/Pagination";
 import { Bill, PaginationType } from "../globals";
 
 export async function fetchBills(current_page: number) {
+  const params = new URLSearchParams({
+    items_per_page: "20",
+    page: `${current_page}`,
+    order_by: "date_introduced",
+    order_direction: "DESC"
+  });
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal?items_per_page=10&page=${current_page}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal?${params.toString()}`,
     {
       cache: "no-store",
     }
