@@ -1,4 +1,5 @@
 import BillData from "../../components/bills/BillData";
+import BillVotes from "../../components/bills/BillVoteData";
 import { Bill } from "../../globals"
 
 
@@ -31,8 +32,13 @@ export default async function BillDetailsPage({ params }: PageProps) {
 
   return (
     <div className="w-full h-full items-start justify-start p-4 lg:p-8">
-    <BillData bill = {bill}/>
-    </div>
+    <BillData bill={bill} />
+  
+    {/* Only render BillVotes if final_date_voted exists */}
+    {bill.final_date_voted ? (
+      <BillVotes billId={bill.id} />
+    ) : null}
+  </div>
    
   );
 }
