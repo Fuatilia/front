@@ -57,12 +57,6 @@ const Header = () => {
           >
             Reps
           </Link>
-          <Link
-            href="/signup"
-            className="w-full lg:w-[100px] h-[40px] flex items-center justify-center bg-slate-100 rounded-xl"
-          >
-            Sign Up
-          </Link>
         </div>
       </div>
     </header>

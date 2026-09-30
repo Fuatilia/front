@@ -36,6 +36,9 @@ export type Bill = {
 export type Party = 'UDA' | 'WDM' | 'ODM' | 'IND';
 export type PositionClass = 'ELECTED' | 'NOMINATED';
 export type Position = 'MP' | 'SENATOR'
+export interface RepresentationSummary {
+  [yearRange: string]: Array<{ party: string }>;
+}
 
 export type Representative = {
   id: string;
@@ -47,9 +50,7 @@ export type Representative = {
   phone_number: string | null;
   gender: string | null;
   current_parliamentary_roles: string | null;
-  representation_summary: {
-    party: Party;
-  };
+  representation_summary: string;  // It arrives from the API as a string
   version: number;
   created_at: string;
   updated_at: string;
@@ -60,3 +61,33 @@ export type PaginationType = {
   items_per_page: number;
   total_pages: number;
 };
+
+export type Faq = {
+  id: string;
+  faq?: string;
+  answer?: string;
+}
+
+export type Vote = {
+  id: string;
+  bill_id?: string;
+  representative_id?: string;
+  vote_type?: string;
+  vote_summary?: string;
+  house?: string;
+  vote?: string;
+}
+
+
+export interface RepVoteSummary {
+  id: string;
+  title?: string;
+  vote?: string;
+  bill_id?: string;
+  vote_type?: string;
+}
+
+export interface RepresentativeVoteListProps  {
+  votedYes?: RepVoteSummary[];
+  votedNo?: RepVoteSummary[];
+}
