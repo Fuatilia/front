@@ -25,7 +25,7 @@ const BillData = ({ bill }: { bill: Bill }) => {
 
       try {
         setIsLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/${bill.sponsored_by}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal/${bill.sponsored_by}`, {
             cache: 'no-store', 
         });
 
@@ -80,7 +80,7 @@ const BillData = ({ bill }: { bill: Bill }) => {
       return (
         <Link
           href={`/reps/${bill.sponsored_by}`}
-          className="text-blue-600 hover:underline font-medium"
+          className="text-blue-600 hover:bg-orange-100 font-medium"
         >
           {sponsorName}
         </Link>

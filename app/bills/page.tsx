@@ -11,7 +11,7 @@ export async function fetchBills(current_page: number) {
   });
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal?${params.toString()}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/portal?${params.toString()}`,
     {
       cache: "no-store",
     }

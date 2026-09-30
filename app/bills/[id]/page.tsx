@@ -8,7 +8,7 @@ interface PageProps {
 
 
 export async function fetchBillDetails(id: string){
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/portal/${id}`, {
         cache: 'no-store', 
     });
   

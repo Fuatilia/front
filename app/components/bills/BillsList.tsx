@@ -30,7 +30,7 @@ const BillsList = ({ bills }: { bills: Bill[] }) => {
       ) : (
         <ul className="space-y-2 max-h-[80vh] overflow-y-scroll">
           {filteredBills.map((bill) => (
-            <li key={bill.id} className="border border-slate-500 p-1 lg:p-2 rounded-xl hover:bg-orange-50 transition-colors duration-200">
+            <li key={bill.id} className="border border-slate-500 p-1 lg:p-2 rounded-xl hover:bg-orange-100 transition-colors duration-200">
               <Link href={`bills/${bill.id}`} className="flex justify-between items-center p-1 lg:p-2 text-sm w-full h-full cursor-pointer group">
 
                 <div className="w-[60%] group-hover:text-[black] transition-colors duration-200">

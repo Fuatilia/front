@@ -16,7 +16,7 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
 
 
   const imageResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/image/${rep.id}?${params.toString()}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal/image/${rep.id}?${params.toString()}`,
     {
       cache: "no-store",
     }
@@ -55,10 +55,11 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
 async function fetchRepBills(id: string) {
     const params = new URLSearchParams({
       sponsored_by: `${id}`,
-      page: '1',      
+      page: '1',
+      order_by: "date_introduced" 
     });
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}bills/portal?${params.toString()}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/portal?${params.toString()}`, {
         cache: 'no-store', 
     });
   
@@ -78,7 +79,7 @@ async function fetchRepVotes(id: string, vote :string) {
   });
 
     // TODO : Query for Yes votes and No votes
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}votes/portal/rep-summary/${id}?${params.toString()}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/summaries/portal/rep-votes/${id}?${params.toString()}`, {
         cache: 'no-store', 
     });
 
@@ -92,7 +93,7 @@ async function fetchRepVotes(id: string, vote :string) {
 }
 
 async function fetchRepDetails(id: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}representatives/portal/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal/${id}`, {
         cache: 'no-store', 
     });
   
