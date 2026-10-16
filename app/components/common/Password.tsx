@@ -17,27 +17,23 @@ const Password = ({password, handleChange}: TPassword) => {
     setSeePassword(!seePassword);
   }
   return (
-    <div className="w-full lg:w-[600px]">
+    <div className="password-wrapper">
         <label htmlFor="password" className="sr-only">
           Password
         </label>
-        <div className={"flex"}>
+        <div className="password-input-wrapper">
           <input
             id="password"
             name="password"
             type={seePassword ? "text" : "password"}
             required
-            className={
-              "w-[80%] lg:w-[500px]  h-[40px] pl-[1rem] bg-transparent border border-slate-300 rounded-l-2xl  outline-none mb-3"
-            }
+            className="password-input"
             placeholder="Password"
             value={password}
             onChange={handleChange}
           />
           <button
-            className={
-              "w-[20%] lg:w-[100px] h-[40px] flex items-center justify-center bg-transparent border border-slate-300 rounded-r-2xl outline-none mb-3 cursor-pointer"
-            }
+            className="password-toggle"
             onClick={(e) => togglePassword(e)}
           >
             {seePassword ? <LuEyeClosed /> : <FaEye />}

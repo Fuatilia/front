@@ -1,6 +1,7 @@
 import BillsList from "../components/bills/BillsList";
 import Pagination from "../components/common/Pagination";
 import { Bill, PaginationType } from "../globals";
+import { CACHE_REVALIDATE_SECONDS } from "../cache";
 
 export async function fetchBills(current_page: number) {
   const params = new URLSearchParams({
@@ -13,7 +14,7 @@ export async function fetchBills(current_page: number) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/portal?${params.toString()}`,
     {
-      cache: "no-store",
+      next: { revalidate: 3600 },
     }
   );
 

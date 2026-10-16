@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { CACHE_REVALIDATE_SECONDS } from "../../cache";
 
 export interface VoteItem {
   house: string;
@@ -16,8 +17,8 @@ interface VoteApiResponse {
 }
 
 interface BillVotesProps {
-  billId?: string; // Optional: If fetching directly inside component
-  initialVotes?: VoteItem[]; // Optional: If votes are passed down from parent page
+  billId?: string;
+  initialVotes?: VoteItem[];
 }
 
 export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
@@ -26,7 +27,6 @@ export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Skip fetching if votes were provided via props or no billId exists
     if (initialVotes || !billId) return;
 
     let isMounted = true;
@@ -38,7 +38,7 @@ export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
 
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/summaries/portal/bill-votes/${billId}`,
-          { cache: "no-store" }
+          { next: { revalidate: CACHE_REVALIDATE_SECONDS } }
         );
 
         if (!response.ok) {
@@ -67,7 +67,6 @@ export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
     };
   }, [billId, initialVotes]);
 
-  // Aggregate raw votes array by house
   const aggregatedVotes = useMemo(() => {
     const map: Record<string, { yes: number; no: number; absent: number; total: number }> = {};
 
@@ -87,7 +86,7 @@ export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
 
   if (isLoading) {
     return (
-      <div className="py-4 text-center text-sm text-gray-500">
+      <div className="vote-loading">
         Loading voting results...
       </div>
     );
@@ -95,7 +94,7 @@ export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
 
   if (error) {
     return (
-      <div className="py-3 px-4 rounded bg-red-50 text-red-600 text-sm">
+      <div className="vote-error">
         {error}
       </div>
     );
@@ -103,17 +102,17 @@ export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
 
   if (Object.keys(aggregatedVotes).length === 0) {
     return (
-      <div className="py-4 text-center text-sm text-gray-400">
+      <div className="vote-empty">
         No voting records found for this bill.
       </div>
     );
   }
 
   return (
-    <div className="p-3 max-w-2xl mx-auto">
-      <h3 className="text-lg font-bold text-gray-800">Voting Results</h3>
+    <div className="vote-container">
+      <h3 className="vote-section-title">Voting Results</h3>
 
-      <div className="p-3 max-w-2xl mx-auto space-y-6">
+      <div className="vote-house-list">
         {Object.entries(aggregatedVotes).map(([houseName, totals]) => {
           const yesPercent = totals.total > 0 ? Math.round((totals.yes / totals.total) * 100) : 0;
           const noPercent = totals.total > 0 ? Math.round((totals.no / totals.total) * 100) : 0;
@@ -122,62 +121,60 @@ export default function BillVotes({ billId, initialVotes }: BillVotesProps) {
           return (
             <div
               key={houseName}
-              className="p-4 border rounded-xl bg-white shadow-sm hover:shadow transition space-y-3"
+              className="vote-house-card"
             >
-              <div className="flex justify-between items-center border-b pb-2">
-                <span className="font-semibold text-sm tracking-wide text-gray-700">
+              <div className="vote-house-header">
+                <span className="vote-house-name">
                   {houseName}
                 </span>
-                <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                <span className="vote-total-badge">
                   Total: {totals.total}
                 </span>
               </div>
 
-              {/* Stat Cards */}
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="bg-emerald-50 border border-emerald-100 p-2.5 rounded-lg">
-                  <div className="text-xs font-bold text-emerald-700 uppercase tracking-wider">
+              <div className="vote-stats-grid">
+                <div className="vote-stat-card-yes">
+                  <div className="vote-stat-label">
                     YES
                   </div>
-                  <div className="text-xl font-extrabold text-emerald-800">
+                  <div className="vote-stat-value-yes">
                     {totals.yes}
                   </div>
                 </div>
 
-                <div className="bg-rose-50 border border-rose-100 p-2.5 rounded-lg">
-                  <div className="text-xs font-bold text-rose-700 uppercase tracking-wider">
+                <div className="vote-stat-card-no">
+                  <div className="vote-stat-label">
                     NO
                   </div>
-                  <div className="text-xl font-extrabold text-rose-800">
+                  <div className="vote-stat-value-no">
                     {totals.no}
                   </div>
                 </div>
 
-                <div className="bg-gray-50 border border-gray-100 p-2.5 rounded-lg">
-                  <div className="text-xs font-bold text-black-700 uppercase tracking-wider">
+                <div className="vote-stat-card-absent">
+                  <div className="vote-stat-label">
                     ABSENT
                   </div>
-                  <div className="text-xl font-extrabold text-rose-800">
+                  <div className="vote-stat-value-absent">
                     {totals.absent}
                   </div>
                 </div>
               </div>
 
-              {/* Split Bar */}
-              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden flex">
+              <div className="vote-bar-container">
                 <div
                   style={{ width: `${yesPercent}%` }}
-                  className="bg-emerald-500 h-full transition-all duration-300"
+                  className="vote-bar-yes"
                   title={`YES: ${yesPercent}%`}
                 />
                 <div
                   style={{ width: `${noPercent}%` }}
-                  className="bg-rose-500 h-full transition-all duration-300"
+                  className="vote-bar-no"
                   title={`NO: ${noPercent}%`}
                 />
                 <div
                   style={{ width: `${absentPercent}%` }}
-                  className="bg-gray-500 h-full transition-all duration-300"
+                  className="vote-bar-absent"
                   title={`ABSENT: ${absentPercent}%`}
                 />
               </div>

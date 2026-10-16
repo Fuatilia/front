@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import {Bill } from "../../globals";
 import Link from "next/link";
 import FormatDate from "../../providers/DateFormatter";
+import { CACHE_REVALIDATE_SECONDS } from "../../cache";
 
 
 const BillData = ({ bill }: { bill: Bill }) => {
@@ -26,7 +27,7 @@ const BillData = ({ bill }: { bill: Bill }) => {
       try {
         setIsLoading(true);
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal/${bill.sponsored_by}`, {
-            cache: 'no-store', 
+            next: { revalidate: CACHE_REVALIDATE_SECONDS },
         });
 
         if (!response.ok) {
@@ -80,7 +81,7 @@ const BillData = ({ bill }: { bill: Bill }) => {
       return (
         <Link
           href={`/reps/${bill.sponsored_by}`}
-          className="text-blue-600 hover:bg-orange-100 font-medium"
+          className="sponsor-link"
         >
           {sponsorName}
         </Link>
@@ -91,8 +92,8 @@ const BillData = ({ bill }: { bill: Bill }) => {
   };
 
   return (
-    <div className="p-3 max-w-2xl mx-auto">
-          <h1 className="text-2xl font-bold">{bill.title}</h1>
+    <div className="bill-data">
+          <h1 className="bill-title">{bill.title}</h1>
 
           <p className="text-custom-detail-keys">
               Sponsored By:{" "}

@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import { Red_Hat_Mono } from "next/font/google";
 import "./globals.css";
 import "./page.css";
+import "./components.css";
 import Header from "./components/Header";
 import ReactQueryProvider from "./providers/QueryProvider";
 
@@ -29,7 +30,7 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${redHatMono.variable} flex flex-col h-[100vh] justify-between`}
+        className={`${inter.variable} ${redHatMono.variable} layout-body`}
       >
         <ReactQueryProvider>
           <Header />

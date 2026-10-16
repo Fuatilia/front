@@ -13,38 +13,38 @@ const RepsList = ({ reps }: { reps: Representative[] }) => {
   }, [searchText, reps]);
 
   return (
-    <div className={"w-full h-full items-start justify-start p-4 lg:p-8"}>
-      <div className="w-full flex flex-col mb-4 lg:flex-row lg:justify-between lg:items-center">
-        <h1 className="text-xl font-semibold mb-2 lg:mb-0">Representatives</h1>
+    <div className="reps-list">
+      <div className="reps-header">
+        <h1 className="section-title">Representatives</h1>
         <input
           type="text"
           placeholder="Search..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          className="w-full lg:w-[400px] border border-slate-300 rounded-xl text-sm py-2 px-4 bg-transparent"
+          className="search-input"
         />
       </div>
 
       {filteredReps.length === 0 && searchText?.length > 0 ? (
         <p>No matching reps found.</p>
       ) : (
-        <ul className="space-y-2 max-h-[80vh] overflow-y-scroll">
+<ul className="reps-list-ul">
           {filteredReps.map((rep) => (
-             <li key={rep.id} 
-              className="border border-slate-500 p-1 lg:p-2 rounded-xl hover:bg-orange-100 transition-colors duration-200">
-              <Link href={`reps/${rep.id}`} className="flex justify-between items-center p-1 lg:p-2 text-sm w-full h-full cursor-pointer group">
+              <li key={rep.id} className="rep-list-item">
+                <Link href={`reps/${rep.id}`} className="rep-list-link">
 
-                <div className="w-[60%] group-hover:text-[black] transition-colors duration-200">
-                  {rep.full_name} - <strong>{rep.area_represented}</strong>
-                </div>
+                  <div className="rep-title-col">
+                    <span className="rep-name-display">{rep.full_name}</span>
+                    <span className="rep-area">{rep.area_represented}</span>
+                  </div>
 
-                <div className="flex flex-col w-[32%] md:w-[20%] lg:w-[15%]">
-                  <p>{rep.position}</p>
-                <p>({rep.position_class})</p>
-                </div>
+                  <div className="rep-meta-col">
+                    <span className="rep-position">{rep.position}</span>
+                    <span className="rep-position-class">({rep.position_class})</span>
+                  </div>
 
-              </Link>
-            </li>
+                </Link>
+              </li>
           ))}
         </ul>
       )}

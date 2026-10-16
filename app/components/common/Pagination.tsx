@@ -49,35 +49,30 @@ export default function Pagination({
   const pages = Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
   return (
-    <div className="my-3 flex gap-2 items-center justify-center">
-      {/* Left arrow */}
+    <div className="pagination">
       {current > 1 && (
         <Link
           href={`?page=${current - 1}`}
-          className="px-3 py-1 rounded border bg-white"
+          className="pagination-arrow"
         >
           ←
         </Link>
       )}
 
-      {/* Page buttons */}
       {pages.map((page) => (
         <Link
           key={page}
           href={`?page=${page}`}
-          className={`px-3 py-1 rounded border ${
-            page === current ? "bg-[#2cbc6350] text-white" : "bg-white"
-          }`}
+          className={`pagination-link ${page === current ? "pagination-link-active" : ""}`}
         >
           {page}
         </Link>
       ))}
 
-      {/* Right arrow */}
       {current < total && (
         <Link
           href={`?page=${current + 1}`}
-          className="px-3 py-1 rounded border bg-white"
+          className="pagination-arrow"
         >
           →
         </Link>
@@ -85,4 +80,3 @@ export default function Pagination({
     </div>
   );
 }
-
