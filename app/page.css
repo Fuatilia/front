@@ -3,7 +3,9 @@
   flex-direction: column;
   font-family: var(--font-inter);
   font-weight: 400;
-  height: 100vh;
+  flex: 1;
+  padding: 0 1rem;
+  overflow-x: hidden;
 }
 
 p {
@@ -50,41 +52,60 @@ p {
 }
 
 .hero-section {
-  padding-top: calc(var(--default-padding) * 10);
+  padding-top: calc(var(--default-padding) * 6);
   display: grid;
   grid-template-columns: repeat(14, 1fr);
   gap: var(--default-gap);
   height: 100%;
+  min-height: 60vh;
+}
 
-  & > * {
-    flex: 1;
-  }
+.hero {
+  grid-column: 2 / span 6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 1rem;
+}
 
-  > .hero {
-    grid-column: 2 / span 6;
-    > h2 {
-      margin-bottom: var(--default-margin);
-      color: #2cbc63;
-      font-size: 2.5rem;
-      font-weight: bold;
-      font-family: var(--font-red-hat-mono);
-    }
+.hero > h2 {
+  margin-bottom: var(--default-margin);
+  color: #2cbc63;
+  font-size: 2.75rem;
+  font-weight: 800;
+  font-family: var(--font-red-hat-mono);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
 
-    > p {
-      color: #2cbc63;
-      font-style: italic;
-      font-size: 1.25rem;
-    }
-  }
+.hero > p {
+  color: #374151;
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 0;
+  font-weight: 400;
+}
 
-  > .carousel {
-    grid-column: 9 / span 5;
-    width: 100%;
+.carousel {
+  grid-column: 9 / span 5;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2rem;
+}
 
-    > .carousel-item {
-      width: 100%;
-    }
-  }
+.carousel-item {
+  width: 100%;
+  max-width: 320px;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .footer-content {
@@ -145,5 +166,20 @@ p {
         font-size: 0.8rem;
       }
     }
+  }
+
+  .carousel {
+    min-height: 20rem;
+
+    .carousel-item img {
+      width: 85vw;
+      height: auto;
+      max-width: 260px;
+    }
+  }
+
+  .footer-content {
+    font-size: 14px;
+    padding: 1rem;
   }
 }

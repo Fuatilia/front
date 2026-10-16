@@ -3,6 +3,7 @@ import { Representative, RepresentativeVoteListProps, RepVoteSummary } from "../
 import RepresentativeData from "../../components/reps/RepData";
 import RepresentativeBillList from '../../components/reps/BillsSponsored';
 import RepresentativeVoteList from '../../components/reps/RepVotes';
+import { CACHE_REVALIDATE_SECONDS } from "../../cache";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -18,7 +19,7 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
   const imageResponse = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal/image/${rep.id}?${params.toString()}`,
     {
-      cache: "no-store",
+      next: { revalidate: CACHE_REVALIDATE_SECONDS },
     }
   );
 
@@ -31,21 +32,24 @@ const RepresentativeImage = async ({ rep }: { rep: Representative }) => {
     const imageRes = await imageResponse.json();
     imageSrc = imageRes.data
     ? `data:image/jpeg;base64,${imageRes.data}`
-    : '/images/fakemp.jpeg'; // Make sure you have a fallback image in your /public/images folder
+    : '/images/fakemp.jpeg';
   };
   
-
   return (
-    <div className={"p-3 max-w-2xl mx-auto"}>
-     <div className="relative sm:w-40 sm:h-40 rounded-sm overflow-hidden bg-gray-100 flex-shrink-0 shadow-sm border border-gray-100 justify ">
+    <div className="rep-image-section">
+      <div className="rep-image-wrapper">
         <Image
           src={imageSrc}
           alt={`${rep.full_name}'s avatar`}
           fill
           sizes="64px"
-          className="object-cover"
-          unoptimized // Prevents Next.js from wasting CPU trying to optimize data strings
+          className="rep-image"
+          unoptimized
         />
+      </div>
+      <div className="rep-image-info">
+        <h1 className="rep-name">{rep.full_name}</h1>
+        <span className="rep-role">{rep.position}</span>
       </div>
     </div>
   );
@@ -60,7 +64,7 @@ async function fetchRepBills(id: string) {
     });
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/portal?${params.toString()}`, {
-        cache: 'no-store', 
+        next: { revalidate: CACHE_REVALIDATE_SECONDS },
     });
   
 
@@ -78,11 +82,9 @@ async function fetchRepVotes(id: string, vote :string) {
     vote: `${vote}`,
   });
 
-    // TODO : Query for Yes votes and No votes
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/summaries/portal/rep-votes/${id}?${params.toString()}`, {
-        cache: 'no-store', 
+        next: { revalidate: CACHE_REVALIDATE_SECONDS },
     });
-
   
     if (!res.ok) {
         throw new Error("Failed to fetch representative vote data")
@@ -94,7 +96,7 @@ async function fetchRepVotes(id: string, vote :string) {
 
 async function fetchRepDetails(id: string) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal/${id}`, {
-        cache: 'no-store', 
+        next: { revalidate: CACHE_REVALIDATE_SECONDS },
     });
   
     if (!res.ok) {
@@ -110,7 +112,7 @@ export default async function RepDetailsPage({ params }: PageProps) {
   const rep :Representative = await fetchRepDetails(id);
 
   if (!rep) {
-    return <p className="p-6">Representative not found.</p>;
+    return <p className="page-not-found">Representative not found.</p>;
   }
 
   const sponsoredBills = await fetchRepBills(id)
@@ -125,7 +127,7 @@ export default async function RepDetailsPage({ params }: PageProps) {
   }
 
   return (
-    <div className="w-full h-full items-start justify-start p-4 lg:p-8">
+    <div className="page-wrapper">
     <RepresentativeImage rep = {rep}/>
     <RepresentativeData rep = {rep}/>
     <RepresentativeBillList  sponsoredBills = {sponsoredBills}/>

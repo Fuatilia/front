@@ -1,6 +1,7 @@
 import BillData from "../../components/bills/BillData";
 import BillVotes from "../../components/bills/BillVoteData";
 import { Bill } from "../../globals"
+import { CACHE_REVALIDATE_SECONDS } from "../../cache";
 
 
 interface PageProps {
@@ -10,7 +11,7 @@ interface PageProps {
 
 export async function fetchBillDetails(id: string){
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/portal/${id}`, {
-        cache: 'no-store', 
+        next: { revalidate: CACHE_REVALIDATE_SECONDS },
     });
   
     if (!res.ok) {
@@ -27,14 +28,13 @@ export default async function BillDetailsPage({ params }: PageProps) {
   const bill :Bill = await fetchBillDetails(id);
 
   if (!bill) {
-    return <p className="p-6">Bill not found.</p>;
+    return <p className="page-not-found">Bill not found.</p>;
   }
 
   return (
-    <div className="w-full h-full items-start justify-start p-4 lg:p-8">
+    <div className="page-wrapper">
     <BillData bill={bill} />
   
-    {/* Only render BillVotes if final_date_voted exists */}
     {bill.final_date_voted ? (
       <BillVotes billId={bill.id} />
     ) : null}
@@ -42,7 +42,3 @@ export default async function BillDetailsPage({ params }: PageProps) {
    
   );
 }
-
-
-
-

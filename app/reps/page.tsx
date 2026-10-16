@@ -1,6 +1,7 @@
 import Pagination from "../components/common/Pagination";
 import RepsList from "../components/reps/RepsList";
 import { PaginationType, Representative } from "../globals";
+import { CACHE_REVALIDATE_SECONDS } from "../cache";
 
 export async function fetchReps(current_page: number) {
   const params = new URLSearchParams({
@@ -13,7 +14,7 @@ export async function fetchReps(current_page: number) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal?${params.toString()}`,
     {
-      cache: "no-store",
+      next: { revalidate: CACHE_REVALIDATE_SECONDS },
     }
   );
 
