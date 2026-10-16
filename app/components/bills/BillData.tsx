@@ -1,69 +1,16 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
 import {Bill } from "../../globals";
 import Link from "next/link";
 import FormatDate from "../../providers/DateFormatter";
-import { CACHE_REVALIDATE_SECONDS } from "../../cache";
 
+interface BillDataProps {
+  bill: Bill;
+  sponsorName?: string;
+  isNameFound?: boolean;
+  sponsorLoading?: boolean;
+}
 
-const BillData = ({ bill }: { bill: Bill }) => {
-  const [sponsorName, setSponsorName] = useState<string>("");
-  const [isNameFound, setIsNameFound] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchSponsor() {
-      if (!bill.sponsored_by) {
-        if (isMounted) {
-          setSponsorName("Unknown Sponsor");
-          setIsNameFound(false);
-          setIsLoading(false);
-        }
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/representatives/portal/${bill.sponsored_by}`, {
-            next: { revalidate: CACHE_REVALIDATE_SECONDS },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const fetchedName = data?.data?.full_name;
-
-        if (isMounted) {
-          if (fetchedName) {
-            setSponsorName(fetchedName);
-            setIsNameFound(true);
-          } else {
-            setSponsorName(bill.sponsored_by);
-            setIsNameFound(false);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch sponsor details:", error);
-        if (isMounted) {
-          setSponsorName(bill.sponsored_by || "Sponsor not found");
-          setIsNameFound(false);
-        }
-      } finally {
-        if (isMounted) setIsLoading(false);
-      }
-    }
-
-    fetchSponsor();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [bill.sponsored_by]);
-
+const BillData = ({ bill, sponsorName = "", isNameFound = false, sponsorLoading = false }: BillDataProps) => {
   const supporters = bill.supported_by?.length
     ? bill.supported_by.join(", ")
     : "None";
@@ -73,7 +20,7 @@ const BillData = ({ bill }: { bill: Bill }) => {
     : "N/A";
 
   const renderSponsor = () => {
-    if (isLoading) {
+    if (sponsorLoading) {
       return <span>Loading...</span>;
     }
 

@@ -949,7 +949,6 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 50%;
   padding: 1.25rem 2rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
@@ -962,6 +961,20 @@ html {
   font-weight: 700;
   min-height: 4.5rem;
   margin: 1.5rem auto;
+}
+
+
+
+@media (min-width: 1024px) {
+  .aspirant-role-card {
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 768px) {
+  .aspirant-role-card {
+    max-width: 75%;
+  }
 }
 
 .aspirant-role-card:hover {
@@ -1035,7 +1048,13 @@ html {
 
 @media (max-width: 768px) {
   .counties-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .constituency-list {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 

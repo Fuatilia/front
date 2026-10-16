@@ -14,7 +14,7 @@ export async function fetchBills(current_page: number) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/bills/portal?${params.toString()}`,
     {
-      next: { revalidate: 3600 },
+      next: { revalidate: CACHE_REVALIDATE_SECONDS },
     }
   );
 
